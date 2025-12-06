@@ -1,0 +1,150 @@
+---
+title: Installation Guide
+description: Step-by-step instructions for installing and configuring VoxelAddons plugins
+---
+
+## System Requirements
+
+Before installing VoxelAddons, ensure your environment meets the minimum requirements for optimal performance.
+
+<Columns cols={2}>
+  <Card title="Server Requirements" icon="server" href="#server-reqs">
+    PHP 7.4+, WordPress 5.0+, Voxel theme 1.0+
+  </Card>
+  <Card title="Recommended Hosting" icon="cloud" href="#hosting">
+    VPS or dedicated server with 2GB+ RAM
+  </Card>
+</Columns>
+
+<Expandable title="Detailed Requirements" default-open="false">
+  | Component | Minimum | Recommended |
+  |-----------|---------|-------------|
+  | PHP Version | 7.4 | 8.0+ |
+  | MySQL | 5.7 | 8.0+ |
+  | Memory Limit | 256MB | 512MB+ |
+  | Max Execution Time | 30s | 60s+ |
+
+  <Callout kind="alert">Ensure your hosting provider supports the required PHP extensions: curl, json, mbstring, and openssl.</Callout>
+</Expandable>
+
+## Installing VoxPro (Foundation)
+
+VoxPro must be installed first as it provides the core framework for all other plugins.
+
+<Steps>
+  <Step title="Download Plugin" icon="download">
+    Purchase and download VoxPro from the VoxelAddons marketplace.
+  </Step>
+  <Step title="Upload to WordPress" icon="upload">
+    Go to WordPress Admin > Plugins > Add New > Upload Plugin, select the VoxPro zip file.
+  </Step>
+  <Step title="Activate Plugin" icon="play">
+    Click "Activate" to enable VoxPro and initialize the framework.
+  </Step>
+  <Step title="Run Setup Wizard" icon="settings">
+    Access the VoxPro setup wizard from the admin dashboard to configure core settings.
+  </Step>
+</Steps>
+
+<CodeGroup tabs="WP-CLI,Manual">
+  ````bash
+  # WP-CLI installation
+  wp plugin install voxpro.zip --activate
+  ````
+  ````bash
+  # Manual installation via FTP
+  unzip voxpro.zip
+  upload to wp-content/plugins/
+  activate via WordPress admin
+  ````
+</CodeGroup>
+
+## Adding Satellite Plugins
+
+Once VoxPro is installed, you can add specialized plugins in any order.
+
+<Tabs>
+  <Tab title="VoxPulse" icon="mail">
+    <Steps>
+      <Step title="Install Plugin" icon="download">Upload and activate VoxPulse</Step>
+      <Step title="Configure CRM" icon="settings">Set up contact fields and automation rules</Step>
+      <Step title="Sync Voxel Data" icon="refresh">Import existing Voxel users and data</Step>
+    </Steps>
+  </Tab>
+  <Tab title="VoxPay" icon="credit-card">
+    <Steps>
+      <Step title="Install Plugin" icon="download">Upload and activate VoxPay</Step>
+      <Step title="Configure PayPal" icon="settings">Enter API credentials and webhook URLs</Step>
+      <Step title="Set Up Products" icon="package">Create digital products and pricing</Step>
+    </Steps>
+  </Tab>
+  <Tab title="VoxPoints" icon="trophy">
+    <Steps>
+      <Step title="Install Plugin" icon="download">Upload and activate VoxPoints</Step>
+      <Step title="Configure Rules" icon="settings">Set up point allocation and achievement systems</Step>
+      <Step title="Test Gamification" icon="play">Verify point earning and redemption flows</Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Configuration and Setup
+
+After installation, configure each plugin through the unified VoxPro admin dashboard.
+
+<ExpandableGroup>
+  <Expandable title="Database Setup">
+    VoxPro automatically creates required database tables. For manual setup:
+    
+    ````sql
+    -- Example: Create VoxPro tables (auto-handled)
+    CREATE TABLE voxpro_cache (
+      cache_key VARCHAR(255) PRIMARY KEY,
+      cache_value LONGTEXT,
+      expires_at TIMESTAMP
+    );
+    ````
+  </Expandable>
+  <Expandable title="Permission Settings">
+    Configure user roles and capabilities for plugin access:
+    
+    <Callout kind="info">Administrators have full access by default. Create custom roles for limited plugin management.</Callout>
+  </Expandable>
+</ExpandableGroup>
+
+## Troubleshooting Common Issues
+
+<Callout kind="danger">If plugins fail to activate, check PHP error logs and ensure all dependencies are met.</Callout>
+
+<Tabs>
+  <Tab title="Activation Errors" icon="alert-triangle">
+    Common causes: Missing PHP extensions, insufficient memory, or conflicting plugins.
+    
+    <Steps>
+      <Step title="Check PHP Logs" icon="file-text">Review error logs for specific failure reasons</Step>
+      <Step title="Verify Requirements" icon="check">Ensure PHP 7.4+ and required extensions</Step>
+      <Step title="Disable Conflicts" icon="x">Temporarily deactivate other plugins to isolate issues</Step>
+    </Steps>
+  </Tab>
+  <Tab title="Database Connection" icon="database">
+    Issues with database connectivity or table creation.
+    
+    ````php
+    // Test database connection
+    global $wpdb;
+    if (!$wpdb->check_connection()) {
+      error_log('Database connection failed');
+    }
+    ````
+  </Tab>
+</Tabs>
+
+## Post-Installation Tasks
+
+Complete these steps after successful installation for optimal performance.
+
+<Steps>
+  <Step title="Clear Caches" icon="refresh">Clear WordPress and plugin caches</Step>
+  <Step title="Test Functionality" icon="check">Verify each plugin's core features work</Step>
+  <Step title="Configure Backups" icon="save">Set up automated backups for plugin data</Step>
+  <Step title="Monitor Performance" icon="bar-chart">Check loading times and resource usage</Step>
+</Steps>

@@ -1,0 +1,169 @@
+---
+title: Plugin Overview
+description: Detailed breakdown of each VoxelAddons plugin and its role in the ecosystem
+---
+
+## VoxPro - Master Framework
+
+VoxPro serves as the foundational plugin for the entire VoxelAddons ecosystem, providing essential services and infrastructure that other plugins depend on.
+
+<Callout kind="info">VoxPro is required for all other VoxelAddons plugins and provides the unified administration interface.</Callout>
+
+<Columns cols={2}>
+  <Card title="Core Services" icon="cpu" href="#core-services">
+    Cache management, logging, queue processing, and cron job scheduling.
+  </Card>
+  <Card title="UI Components" icon="layout" href="#ui-components">
+    20+ Elementor widgets for authentication, forms, and interface elements.
+  </Card>
+</Columns>
+
+### Authentication Features
+
+VoxPro includes comprehensive social authentication support with 10 OAuth providers, enabling users to sign up and log in using popular social media accounts.
+
+<Steps>
+  <Step title="Configure OAuth Providers" icon="settings">
+    Set up API keys for desired social platforms in the VoxPro settings.
+  </Step>
+  <Step title="Enable Social Login" icon="user">
+    Activate social authentication widgets on your login and registration pages.
+  </Step>
+  <Step title="Test Integration" icon="check-circle">
+    Verify login flows work correctly with social providers.
+  </Step>
+</Steps>
+
+### Advanced Functionality
+
+<ExpandableGroup>
+  <Expandable title="Booking Calendar Integration">
+    VoxPro provides calendar widgets that integrate with Voxel's booking system, allowing users to view and manage reservations directly.
+    
+    ````php
+    // Example: Booking calendar setup
+    $calendar = new VoxPro_BookingCalendar();
+    $calendar->render(['post_type' => 'rental']);
+    ````
+  </Expandable>
+  <Expandable title="Bulk Operations Tool">
+    Administrators can perform bulk actions on multiple items, such as updating prices, changing statuses, or applying categories.
+    
+    <Callout kind="tip">Use bulk operations to efficiently manage large inventories or user databases.</Callout>
+  </Expandable>
+</ExpandableGroup>
+
+## VoxPulse - CRM & Marketing
+
+VoxPulse transforms Voxel into a complete customer relationship management system with marketing automation capabilities.
+
+<Tabs>
+  <Tab title="Contact Management" icon="users">
+    Manage customer contacts with detailed profiles, interaction history, and segmentation capabilities.
+    
+    | Feature | Description |
+    |---------|-------------|
+    | Lead Scoring | Automatic scoring based on user behavior |
+    | Tagging | Custom tags for organization and filtering |
+    | Segments | Dynamic user groups for targeted campaigns |
+  </Tab>
+  <Tab title="Email Campaigns" icon="mail">
+    Create and send automated email sequences to engage customers throughout their journey.
+    
+    <CodeGroup tabs="REST API,Webhook">
+      ````bash
+      # REST API example for contact creation
+      curl -X POST /api/voxpulse/contacts \
+        -H "Content-Type: application/json" \
+        -d '{"email":"user@example.com","name":"John Doe"}'
+      ````
+      ````javascript
+      // Webhook integration for order events
+      VoxPulse.Webhook.on('order_completed', function(data) {
+        // Send follow-up email
+        VoxPulse.Email.send('thank_you', data.customer_email);
+      });
+      ````
+    </CodeGroup>
+  </Tab>
+</Tabs>
+
+## VoxPay - Payments & Licensing
+
+VoxPay handles all payment processing and digital product delivery for Voxel marketplaces.
+
+<Expandable title="Payment Gateways" default-open="true">
+  VoxPay supports PayPal Checkout and Subscriptions, with plans for additional gateways in future updates.
+  
+  <Steps>
+    <Step title="Configure PayPal" icon="credit-card">
+      Enter your PayPal API credentials in the VoxPay settings panel.
+    </Step>
+    <Step title="Set Up Products" icon="package">
+      Create digital products with pricing, licensing options, and delivery methods.
+    </Step>
+    <Step title="Enable Checkout" icon="shopping-cart">
+      Integrate VoxPay checkout widgets into your Voxel marketplace pages.
+    </Step>
+  </Steps>
+</Expandable>
+
+<Callout kind="success">VoxPay includes abandoned cart recovery and automatic license generation for seamless digital product sales.</Callout>
+
+## VoxPoints - Gamification
+
+VoxPoints adds a comprehensive loyalty and gamification system to increase user engagement.
+
+<Columns cols={3}>
+  <Card title="Achievements" icon="award" href="#achievements">
+    Unlockable badges and milestones for user progression.
+  </Card>
+  <Card title="Leaderboards" icon="trophy" href="#leaderboards">
+    Competitive rankings to encourage participation.
+  </Card>
+  <Card title="Challenges" icon="target" href="#challenges">
+    Time-limited tasks and goals for active engagement.
+  </Card>
+</Columns>
+
+### Rule Engine
+
+The advanced rule engine allows administrators to create complex point allocation systems based on user actions.
+
+````javascript
+// Example: Points rule configuration
+VoxPoints.Rule.create({
+  trigger: 'order_completed',
+  points: 100,
+  conditions: {
+    'order_total': { '>=': 50 }
+  }
+});
+````
+
+<ExpandableGroup>
+  <Expandable title="Referral System">
+    Users can earn points by referring new customers, creating viral growth opportunities.
+  </Expandable>
+  <Expandable title="Membership Tiers">
+    Different user levels with exclusive benefits and point multipliers.
+  </Expandable>
+</ExpandableGroup>
+
+## VoxLab - AI Assistant
+
+VoxLab provides AI-powered tools for Voxel development and extension.
+
+<Tabs>
+  <Tab title="Code Generation" icon="code">
+    Generate, fix, and explain Voxel-specific code using advanced AI models.
+  </Tab>
+  <Tab title="Plugin Builder" icon="tool">
+    Create custom plugins and extensions with guided AI assistance.
+  </Tab>
+  <Tab title="Data Scraping" icon="database">
+    Extract data from external sources like Google Maps and Yelp for Voxel integration.
+  </Tab>
+</Tabs>
+
+<Callout kind="tip">VoxLab supports 5 major AI providers and includes sandbox execution for safe code testing.</Callout>

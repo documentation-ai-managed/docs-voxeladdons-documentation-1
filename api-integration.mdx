@@ -1,0 +1,236 @@
+---
+title: API Integration
+description: Comprehensive guide to integrating VoxelAddons APIs with external systems and applications
+---
+
+## VoxPro Bridge API
+
+The VoxPro Bridge API provides a unified interface for interacting with VoxelAddons plugins and the underlying Voxel theme.
+
+<Callout kind="info">All API endpoints require authentication via API keys generated in the VoxPro admin panel.</Callout>
+
+<Columns cols={2}>
+  <Card title="REST API" icon="globe" href="#rest-api">
+    Standard RESTful endpoints for CRUD operations across all plugins.
+  </Card>
+  <Card title="Webhook System" icon="webhook" href="#webhooks">
+    Real-time event notifications for external system integration.
+  </Card>
+</Columns>
+
+### Authentication
+
+Secure your API requests using Bearer token authentication.
+
+<Steps>
+  <Step title="Generate API Key" icon="key">Create an API key in VoxPro settings with appropriate permissions</Step>
+  <Step title="Include in Headers" icon="file-text">Add Authorization header to all API requests</Step>
+  <Step title="Handle Token Expiry" icon="clock">Implement token refresh logic for long-running applications</Step>
+</Steps>
+
+<CodeGroup tabs="cURL,JavaScript,Python">
+  ````bash
+  # Example API request with authentication
+  curl -X GET /api/voxpro/users \
+    -H "Authorization: Bearer YOUR_API_KEY" \
+    -H "Content-Type: application/json"
+  ````
+  ````javascript
+  // JavaScript API client
+  const client = new VoxProAPI({ apiKey: 'YOUR_KEY' });
+  const users = await client.users.list({ limit: 50 });
+  ````
+  ````python
+  # Python API integration
+  import requests
+  
+  headers = {'Authorization': 'Bearer YOUR_API_KEY'}
+  response = requests.get('/api/voxpro/users', headers=headers)
+  users = response.json()
+  ````
+</CodeGroup>
+
+## VoxPulse CRM API
+
+Integrate customer data and marketing automation with external CRM systems.
+
+<Expandable title="Contact Management" default-open="true">
+  VoxPulse provides comprehensive contact APIs for synchronization with external systems.
+  
+  <Tabs>
+    <Tab title="Import Contacts" icon="upload">
+      Bulk import contacts from CSV or external APIs.
+      
+      ````javascript
+      // Bulk contact import
+      VoxPulse.API.contacts.import({
+        source: 'csv',
+        data: contactData,
+        mapping: {
+          email: 'email_field',
+          name: 'full_name'
+        }
+      });
+      ````
+    </Tab>
+    <Tab title="Sync Segments" icon="refresh">
+      Automatically sync user segments with marketing platforms.
+      
+      <Callout kind="tip">Use webhooks to trigger real-time segment updates when user data changes.</Callout>
+    </Tab>
+  </Tabs>
+</Expandable>
+
+<ExpandableGroup>
+  <Expandable title="Email Campaign Integration">
+    Connect VoxPulse email campaigns with external marketing tools like Mailchimp or SendGrid.
+    
+    | Endpoint | Method | Description |
+    |----------|--------|-------------|
+    | /api/voxpulse/campaigns | GET | List email campaigns |
+    | /api/voxpulse/campaigns | POST | Create new campaign |
+    | /api/voxpulse/campaigns/{id}/send | POST | Send campaign |
+  </Expandable>
+  <Expandable title="Automation Workflows">
+    VoxPulse supports 8 event listeners for creating complex automation sequences.
+    
+    <Steps>
+      <Step title="Define Triggers" icon="zap">Set up event triggers (order completed, user registered, etc.)</Step>
+      <Step title="Configure Actions" icon="settings">Define automated responses (send email, update tags, create tasks)</Step>
+      <Step title="Test Workflows" icon="play">Verify automation logic with test data</Step>
+    </Steps>
+  </Expandable>
+</ExpandableGroup>
+
+## VoxPay Payment API
+
+Handle payment processing and digital license management through comprehensive APIs.
+
+<Tabs>
+  <Tab title="Payment Processing" icon="credit-card">
+    Process payments and manage transactions programmatically.
+    
+    ````python
+    # Payment creation example
+    payment = VoxPay.API.payments.create({
+      'amount': 99.99,
+      'currency': 'USD',
+      'description': 'Premium License',
+      'customer_email': 'user@example.com'
+    })
+    ````
+  </Tab>
+  <Tab title="License Management" icon="key">
+    Generate and validate digital licenses for software products.
+    
+    <Expandable title="License Validation" default-open="false">
+      Implement license checking in your applications.
+      
+      ````bash
+      # License validation API
+      curl -X POST /api/voxpay/licenses/validate \
+        -d 'license_key=ABC123&domain=example.com'
+      ````
+    </Expandable>
+  </Tab>
+</Tabs>
+
+<Callout kind="success">VoxPay includes webhook support for payment status updates and abandoned cart recovery automation.</Callout>
+
+## VoxPoints Gamification API
+
+Integrate point systems and achievements with external applications and platforms.
+
+<Columns cols={3}>
+  <Card title="Points Management" icon="star" href="#points-api">
+    Award, deduct, and transfer points programmatically.
+  </Card>
+  <Card title="Achievements" icon="award" href="#achievements-api">
+    Unlock and track user achievements and badges.
+  </Card>
+  <Card title="Leaderboards" icon="trophy" href="#leaderboards-api">
+    Access and update competitive rankings.
+  </Card>
+</Columns>
+
+### Rule Engine Integration
+
+Connect external events to the VoxPoints rule engine for automatic point allocation.
+
+<CodeGroup tabs="Webhook,Direct API">
+  ````javascript
+  // Webhook integration for external events
+  app.post('/webhook/order-completed', (req, res) => {
+    VoxPoints.API.points.award({
+      user_id: req.body.user_id,
+      points: 100,
+      reason: 'Order completed'
+    });
+  });
+  ````
+  ````php
+  // Direct API integration
+  $pointsAPI = new VoxPoints_API();
+  $pointsAPI->award_points($user_id, 100, 'Referral bonus');
+  ````
+</CodeGroup>
+
+## VoxLab AI API
+
+Leverage AI-powered development tools through programmatic interfaces.
+
+<ExpandableGroup>
+  <Expandable title="Code Generation">
+    Generate Voxel-specific code using AI models.
+    
+    <Steps>
+      <Step title="Submit Prompt" icon="code">Provide detailed requirements for code generation</Step>
+      <Step title="Review Output" icon="eye">Examine generated code for accuracy and security</Step>
+      <Step title="Test Integration" icon="check">Implement and test the generated code</Step>
+    </Steps>
+  </Expandable>
+  <Expandable title="Plugin Builder">
+    Create custom plugins with AI assistance.
+    
+    ````json
+    {
+      "plugin_name": "Custom Voxel Extension",
+      "features": ["custom_post_type", "api_endpoints"],
+      "ai_provider": "openai",
+      "output_format": "zip"
+    }
+    ````
+  </Expandable>
+</ExpandableGroup>
+
+<Callout kind="alert">Always review AI-generated code for security vulnerabilities before deployment.</Callout>
+
+## Error Handling and Rate Limiting
+
+Implement robust error handling and respect API rate limits for reliable integrations.
+
+<Tabs>
+  <Tab title="Error Responses" icon="alert-circle">
+    Handle API errors gracefully with appropriate retry logic.
+    
+    | Status Code | Description | Action |
+    |-------------|-------------|--------|
+    | 400 | Bad Request | Check request parameters |
+    | 401 | Unauthorized | Verify API key |
+    | 429 | Rate Limited | Implement exponential backoff |
+    | 500 | Server Error | Retry with circuit breaker |
+  </Tab>
+  <Tab title="Rate Limiting" icon="clock">
+    VoxPro implements rate limiting to prevent abuse.
+    
+    <Expandable title="Rate Limit Headers" default-open="false">
+      Check response headers for rate limit information.
+      
+      ```
+      X-RateLimit-Limit: 1000
+      X-RateLimit-Remaining: 950
+      X-RateLimit-Reset: 1640995200
+      ```
+    </Expandable>
+  </Tab>
+</Tabs>

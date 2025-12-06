@@ -1,0 +1,213 @@
+openapi: '3.0.0'
+info:
+  version: 1.0.0
+  title: VoxelAddons API
+  license:
+    name: MIT
+servers:
+  - url: http://voxeladdons.com/api/v1
+paths:
+  /plugins:
+    get:
+      summary: Retrieve a paginated list of all available VoxelAddons plugins with detailed information including features, dependencies, and current versions. This endpoint supports filtering by plugin status and sorting by installation date to help administrators manage their plugin ecosystem effectively.
+      operationId: listPlugins
+      parameters:
+        - name: limit
+          in: query
+          description: Number of plugins to return per page, maximum 100 for performance optimization
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: Successful response with paginated plugin list including metadata
+          headers:
+            x-next:
+              description: Link to the next page of results for pagination
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugins'
+        default:
+          description: Error response for unexpected server issues or invalid requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Install and activate a new VoxelAddons plugin to the system, automatically resolving dependencies and performing compatibility checks. This endpoint handles the complete plugin installation workflow including database migrations and service registration.
+      operationId: installPlugin
+      responses:
+        201:
+          description: Plugin successfully installed and activated with all dependencies resolved
+        default:
+          description: Installation failed due to compatibility issues or dependency conflicts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /plugins/{pluginId}:
+    get:
+      summary: Retrieve detailed configuration and status information for a specific VoxelAddons plugin, including current version, active features, and performance metrics. This endpoint provides administrators with comprehensive insights for plugin management and troubleshooting.
+      operationId: getPlugin
+      parameters:
+        - name: pluginId
+          in: path
+          required: true
+          description: Unique identifier of the plugin to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Plugin details successfully retrieved with full configuration information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugins'
+        default:
+          description: Plugin not found or access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users:
+    get:
+      summary: List all users registered in the VoxelAddons system with their associated plugin permissions and activity data. This endpoint supports user management across the entire plugin ecosystem and includes filtering options for administrative purposes.
+      operationId: listUsers
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of users to return in a single request
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: Users list retrieved successfully with pagination information
+          headers:
+            x-next:
+              description: URL for accessing the next page of user results
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+        default:
+          description: Request failed due to authentication or server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Register a new user account in the VoxelAddons system with appropriate permissions for plugin access and management. This endpoint handles user creation with email verification and initial role assignment.
+      operationId: createUser
+      responses:
+        201:
+          description: User account created successfully and verification email sent
+        default:
+          description: User creation failed due to validation errors or system constraints
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /payments:
+    get:
+      summary: Retrieve payment transaction history and billing information for the VoxelAddons account, including subscription details and invoice data. This endpoint provides comprehensive financial reporting capabilities for administrators.
+      operationId: listPayments
+      parameters:
+        - name: limit
+          in: query
+          description: Number of payment records to retrieve per request
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: Payment history successfully retrieved with transaction details
+          headers:
+            x-next:
+              description: Link to retrieve additional payment records
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payments'
+        default:
+          description: Payment retrieval failed due to access restrictions or system error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Plugin:
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        status:
+          type: string
+        version:
+          type: string
+    Plugins:
+      type: array
+      items:
+        $ref: '#/components/schemas/Plugin'
+    User:
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+    Users:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+    Payment:
+      required:
+        - id
+        - amount
+      properties:
+        id:
+          type: integer
+          format: int64
+        amount:
+          type: number
+        currency:
+          type: string
+        status:
+          type: string
+    Payments:
+      type: array
+      items:
+        $ref: '#/components/schemas/Payment'
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
